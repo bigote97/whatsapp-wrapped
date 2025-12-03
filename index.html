@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>🏆 WhatsApp Wrapped - 2025</title>
+    <meta name="title" content="🏆 WhatsApp Wrapped - 2025">
+    <meta name="description" content="Descubre quién domina tu grupo de WhatsApp. Estadísticas gamificadas: quién envió más mensajes, quién respondió más rápido, podio de palabras y más.">
+    <meta name="keywords" content="whatsapp, wrapped, estadísticas, chat, gamificación, análisis, mensajes, grupo">
+    <meta name="author" content="WhatsApp Wrapped">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Spanish">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+    <link rel="shortcut icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bigote97.github.io/whatsapp-wrapped/">
+    <meta property="og:title" content="🏆 WhatsApp Wrapped - 2025">
+    <meta property="og:description" content="Descubre quién domina tu grupo de WhatsApp. Estadísticas gamificadas con podios, rankings y métricas divertidas.">
+    <meta property="og:image" content="https://bigote97.github.io/whatsapp-wrapped/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="WhatsApp Wrapped - 2025">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:site_name" content="WhatsApp Wrapped">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://bigote97.github.io/whatsapp-wrapped/">
+    <meta name="twitter:title" content="🏆 WhatsApp Wrapped - 2025">
+    <meta name="twitter:description" content="Descubre quién domina tu grupo de WhatsApp. Estadísticas gamificadas con podios, rankings y métricas divertidas.">
+    <meta name="twitter:image" content="https://bigote97.github.io/whatsapp-wrapped/og-image.png">
+    <meta name="twitter:image:alt" content="WhatsApp Wrapped - 2025">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-TileImage" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="WhatsApp Wrapped">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bigote97.github.io/whatsapp-wrapped/">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- JSZip para manejar archivos ZIP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="confetti-container" id="confettiContainer"></div>
+    
+    <!-- Modal de confirmación personalizado -->
+    <div class="custom-modal" id="customModal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-icon">⚠️</div>
+            <h2 class="modal-title" id="modalTitle">Confirmar acción</h2>
+            <p class="modal-message" id="modalMessage">¿Estás seguro de realizar esta acción?</p>
+            <div class="modal-buttons">
+                <button class="modal-button modal-button-cancel" id="modalCancel">Cancelar</button>
+                <button class="modal-button modal-button-confirm" id="modalConfirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pantalla de upload -->
+    <div class="upload-screen" id="uploadScreen">
+        <div class="upload-content">
+            <h1 class="upload-title">🏆 WhatsApp Wrapped</h1>
+            <p class="upload-subtitle">Sube tu historial de chat para comenzar</p>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept=".txt,.zip" style="display: none;">
+                <label for="fileInput" class="upload-label">
+                    <div class="upload-icon">📁</div>
+                    <p>Haz clic para seleccionar tu archivo</p>
+                    <p class="upload-hint">Acepta archivos .txt o .zip</p>
+                </label>
+            </div>
+            <div id="uploadStatus" class="upload-status" style="display: none;">
+                <div class="spinner"></div>
+                <p>Analizando chat...</p>
+            </div>
+            
+            <!-- Tutorial de cómo exportar chat -->
+            <div class="upload-tutorial">
+                <button class="tutorial-toggle" id="tutorialToggle">
+                    <span class="tutorial-icon">ℹ️</span>
+                    <span>¿Cómo exportar mi chat de WhatsApp?</span>
+                    <span class="tutorial-arrow">▼</span>
+                </button>
+                <div class="tutorial-content" id="tutorialContent" style="display: none;">
+                    <div class="tutorial-step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">Abre la conversación del grupo en WhatsApp</div>
+                    </div>
+                    <div class="tutorial-step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">Toca el ícono de los tres puntos (⋮) en la esquina superior derecha</div>
+                    </div>
+                    <div class="tutorial-step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">Selecciona "Más" del menú</div>
+                    </div>
+                    <div class="tutorial-step">
+                        <div class="step-number">4</div>
+                        <div class="step-text">Toca "Exportar chat"</div>
+                    </div>
+                    <div class="tutorial-step">
+                        <div class="step-number">5</div>
+                        <div class="step-text">Elige si incluir o no los archivos multimedia (recomendamos "Sin multimedia")</div>
+                    </div>
+                    <div class="tutorial-step">
+                        <div class="step-number">6</div>
+                        <div class="step-text">Comparte el archivo .txt o .zip y guárdalo en tu dispositivo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pantalla de inicio -->
+    <div class="splash-screen" id="splashScreen" style="display: none;">
+        <div class="splash-content">
+            <img src="" alt="Grupo" class="splash-group-image" id="splashGroupImage">
+            <h1 class="splash-title">🏆 WhatsApp Wrapped</h1>
+            <p class="splash-group-name" id="splashGroupName">Cargando...</p>
+            <p class="splash-subtitle">2025 - Descubre quién domina el grupo</p>
+            <button class="start-button" id="startButton">¡Comenzar! 🚀</button>
+        </div>
+    </div>
+
+    <div class="container" id="mainContainer" style="display: none;">
+        <div class="header">
+            <img src="" alt="Grupo" class="group-image" id="groupImage">
+            <h1>🏆 WhatsApp Wrapped</h1>
+            <p id="groupNameDisplay">2025 - Descubre quién domina el grupo</p>
+            <button class="upload-new-button" id="uploadNewButton" title="Subir nuevo archivo">📁 Nuevo</button>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Cargando datos...</p>
+        </div>
+
+        <div id="content" style="display: none;">
+            <!-- Sección: Más Mensajes -->
+            <div class="section" id="messagesSection">
+                <h2 class="section-title">💬 Quién Envió Más Mensajes</h2>
+                <div class="podium-container" id="messagesPodium"></div>
+            </div>
+
+            <!-- Sección: Inicios de Conversación -->
+            <div class="section" id="startsSection">
+                <h2 class="section-title">🚀 Quién Inició Más Conversaciones</h2>
+                <div class="podium-container" id="startsPodium"></div>
+            </div>
+
+            <!-- Sección: Tiempos de Respuesta -->
+            <div class="section" id="responseSection">
+                <h2 class="section-title">⚡ Quién Respondió Más Rápido</h2>
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th>Posición</th>
+                            <th>Nombre</th>
+                            <th>Tiempo Promedio</th>
+                        </tr>
+                    </thead>
+                    <tbody id="responseTable"></tbody>
+                </table>
+            </div>
+
+            <!-- Sección: Finales de Conversación -->
+            <div class="section" id="endsSection">
+                <h2 class="section-title">🏁 Quién Terminó Más Conversaciones</h2>
+                <div class="podium-container" id="endsPodium"></div>
+            </div>
+
+            <!-- Sección: Podio de Palabras -->
+            <div class="section" id="wordsSection">
+                <h2 class="section-title">🔤 Podio de Palabras Más Usadas</h2>
+                <div class="words-grid" id="wordsGrid"></div>
+            </div>
+
+            <!-- Pantalla Final -->
+            <div class="section final-screen" id="finalSection">
+                <h1 class="final-title">🏆 Podio General</h1>
+                <p style="font-size: 1.5em; margin-bottom: 30px;">El ranking definitivo basado en todas las métricas</p>
+                <div class="overall-podium" id="overallPodium"></div>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <div class="navigation" id="navigation" style="display: none;">
+            <button class="nav-button" data-section="messagesSection">💬</button>
+            <button class="nav-button" data-section="startsSection">🚀</button>
+            <button class="nav-button" data-section="responseSection">⚡</button>
+            <button class="nav-button" data-section="endsSection">🏁</button>
+            <button class="nav-button" data-section="wordsSection">🔤</button>
+            <button class="nav-button" data-section="finalSection">🏆</button>
+        </div>
+    </div>
+
+    <script src="analyzer.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
