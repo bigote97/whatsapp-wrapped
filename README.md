@@ -1,120 +1,168 @@
 # 🏆 WhatsApp Wrapped - Chat Gamificado
 
-Una herramienta para analizar y visualizar estadísticas de tu chat de WhatsApp de forma gamificada.
+Una aplicación web para analizar y visualizar estadísticas de tu chat de WhatsApp de forma gamificada. Todo funciona directamente en tu navegador, sin necesidad de servidores ni instalaciones.
+
+## ✨ Características
+
+- 🌐 **100% Web-based**: Funciona completamente en el navegador, sin necesidad de servidor
+- 📤 **Subida de archivos**: Sube tu historial de chat directamente desde la interfaz
+- 📦 **Soporte ZIP**: Acepta archivos `.txt` o `.zip` con el historial
+- 💾 **LocalStorage**: Los datos se guardan localmente en tu navegador
+- 🎨 **Avatares automáticos**: Genera avatares genéricos basados en iniciales
+- 📱 **Responsive**: Diseño adaptado para móviles y tablets
+- 🎊 **Gamificación**: Podios, medallas, confeti y rankings competitivos
 
 ## 📁 Estructura del Proyecto
 
 ```
 whatsapp-wrapped/
-├── src/                    # Código fuente (Python y JavaScript)
-│   ├── whatsapp_wrapped.py
-│   └── whatsapp_wrapped.js
-├── web/                    # Archivos web
-│   ├── index.html
-│   ├── styles.css
-│   └── script.js
-├── data/                   # Datos (chat y JSON generado)
-│   ├── Chat de WhatsApp...txt
-│   └── whatsapp_data.json
-├── assets/                 # Recursos (imágenes, etc.)
-│   └── images/
-└── README.md
+├── index.html          # Página principal
+├── script.js           # Lógica de la aplicación
+├── analyzer.js         # Motor de análisis de chat
+├── styles.css          # Estilos y animaciones
+├── .gitignore          # Archivos ignorados por Git
+└── README.md           # Este archivo
 ```
 
 ## 🚀 Cómo usar
 
-### 1. Preparar el archivo de chat
+### Opción 1: Usar desde GitHub Pages
 
-Coloca tu archivo de chat de WhatsApp exportado en la carpeta `data/`:
-- Exporta el chat desde WhatsApp (Configuración → Chats → Exportar chat)
-- Renombra el archivo si es necesario o actualiza la ruta en el script
+Visita: [https://bigote97.github.io/whatsapp-wrapped/](https://bigote97.github.io/whatsapp-wrapped/)
 
-### 2. Generar los datos
+### Opción 2: Ejecutar localmente
 
-Puedes usar **Python** o **JavaScript** (Node.js) para generar los datos:
+1. **Clona o descarga el repositorio**
+   ```bash
+   git clone https://github.com/bigote97/whatsapp-wrapped.git
+   cd whatsapp-wrapped
+   ```
 
-#### Opción A: Usando Python
+2. **Abre `index.html` en tu navegador**
+   - Haz doble clic en el archivo `index.html`
+   - O arrastra el archivo a tu navegador
+   - O usa un servidor local (opcional):
+     ```bash
+     # Con Python
+     python -m http.server 8000
+     
+     # Con Node.js
+     npx http-server
+     ```
+     Luego visita `http://localhost:8000`
 
-Ejecuta el script Python desde la carpeta `src/`:
+3. **Exporta tu chat de WhatsApp**
+   - Abre la conversación del grupo en WhatsApp
+   - Toca el ícono de los tres puntos (⋮) en la esquina superior derecha
+   - Selecciona "Más" → "Exportar chat"
+   - Elige si incluir o no archivos multimedia (recomendamos "Sin multimedia")
+   - Guarda el archivo `.txt` o `.zip` en tu dispositivo
 
-```bash
-cd src
-python whatsapp_wrapped.py
-```
+4. **Sube el archivo en la aplicación**
+   - Haz clic en el área de carga o arrastra el archivo
+   - La aplicación analizará el chat automáticamente
+   - Los datos se guardarán en tu navegador (localStorage)
 
-O desde la raíz del proyecto:
-
-```bash
-python src/whatsapp_wrapped.py
-```
-
-#### Opción B: Usando JavaScript (Node.js)
-
-Ejecuta el script JavaScript desde la carpeta `src/`:
-
-```bash
-cd src
-node whatsapp_wrapped.js
-```
-
-O desde la raíz del proyecto:
-
-```bash
-node src/whatsapp_wrapped.js
-```
-
-Esto generará el archivo `data/whatsapp_data.json` con todos los datos analizados.
-
-### 3. Abrir la página web
-
-Abre el archivo `web/index.html` en tu navegador. Puedes hacerlo de dos formas:
-
-- **Doble clic** en el archivo `web/index.html`
-- O arrastra el archivo a tu navegador
-
-**Nota:** La página web buscará automáticamente el archivo JSON en `data/whatsapp_data.json`
+5. **¡Disfruta de tus estadísticas!**
+   - Navega por las diferentes secciones usando los botones inferiores
+   - Cada sección muestra podios y rankings gamificados
 
 ## 📊 Métricas incluidas
 
-- 💬 **Quién envió más mensajes** - Podio con los top 3
+- 💬 **Quién envió más mensajes** - Podio con los top 3 y ranking completo
 - 🚀 **Quién inició más conversaciones** - Podio con los top 3
-- ⚡ **Quién respondió más rápido** - Tabla con tiempos promedio
+- ⚡ **Quién respondió más rápido** - Tabla con tiempos promedio de respuesta
 - 🏁 **Quién terminó más conversaciones** - Podio con los top 3
 - 🔤 **Podio de palabras más usadas** - Top 10 palabras con sus campeones
+- 🏆 **Podio general** - Ranking definitivo basado en todas las métricas
 
-## 🎨 Características
+## 🎨 Características de diseño
 
-- ✨ Diseño gamificado con gradientes y animaciones
-- 🎊 Confeti cuando se muestran los ganadores
-- 📱 Diseño responsive (funciona en móviles)
-- 🏆 Podios visuales con medallas
-- 📊 Tablas y tarjetas para mostrar estadísticas
+- ✨ **Gradientes animados** y efectos visuales modernos
+- 🎊 **Confeti** cuando se muestran los ganadores
+- 🏆 **Podios visuales** con medallas y avatares
+- 📊 **Tablas y tarjetas** para mostrar estadísticas
+- 🎯 **Navegación intuitiva** con botones animados
+- 💫 **Transiciones suaves** entre secciones
+- 📱 **Diseño responsive** optimizado para todos los dispositivos
 
-## 📝 Requisitos
+## 🔧 Requisitos
 
-- **Python 3.x** (si usas la versión Python) o **Node.js** (si usas la versión JavaScript)
-- Navegador web moderno (Chrome, Firefox, Edge, Safari)
+- **Navegador web moderno** (Chrome, Firefox, Edge, Safari)
+- **JavaScript habilitado**
+- **LocalStorage habilitado** (para guardar los datos)
+
+**No se requiere:**
+- ❌ Python
+- ❌ Node.js
+- ❌ Servidor web
+- ❌ Instalaciones adicionales
+
+## 💾 Almacenamiento de datos
+
+Los datos analizados se guardan automáticamente en el **localStorage** de tu navegador. Esto significa que:
+
+- ✅ Los datos persisten entre sesiones
+- ✅ No se envían a ningún servidor (privacidad total)
+- ✅ Puedes subir un nuevo archivo para reemplazar los datos actuales
+- ✅ Puedes limpiar los datos desde la configuración del navegador si lo deseas
 
 ## 🔄 Actualizar datos
 
-Cada vez que quieras actualizar los datos, simplemente ejecuta:
+Para analizar un nuevo chat o actualizar los datos:
 
-**Con Python:**
-```bash
-python src/whatsapp_wrapped.py
-```
+1. Haz clic en el botón **"📁 Nuevo"** en la esquina superior derecha
+2. Confirma que deseas subir un nuevo archivo
+3. Selecciona o arrastra el nuevo archivo de historial
+4. Los datos anteriores serán reemplazados automáticamente
 
-**Con JavaScript:**
-```bash
-node src/whatsapp_wrapped.js
-```
+## 🎯 Cómo funciona
 
-Y recarga la página web en tu navegador.
+1. **Análisis en el navegador**: El archivo se procesa completamente en tu dispositivo usando JavaScript
+2. **Extracción de datos**: Se extraen mensajes, timestamps, autores y palabras
+3. **Cálculo de métricas**: Se calculan estadísticas como tiempos de respuesta, inicios de conversación, etc.
+4. **Filtrado inteligente**: Se filtran palabras comunes (stop words) para mostrar palabras significativas
+5. **Visualización**: Los datos se presentan de forma gamificada con podios y rankings
+
+## 🔒 Privacidad
+
+- ✅ **100% local**: Todo el procesamiento ocurre en tu navegador
+- ✅ **Sin servidor**: No se envían datos a ningún servidor externo
+- ✅ **Sin tracking**: No se utiliza ningún servicio de analytics
+- ✅ **Tus datos, tu control**: Los datos solo se guardan en tu navegador
+
+## 🐛 Solución de problemas
+
+### El archivo no se carga
+- Verifica que el archivo sea `.txt` o `.zip`
+- Asegúrate de que el archivo no esté corrupto
+- Intenta exportar el chat nuevamente desde WhatsApp
+
+### Los datos no se muestran
+- Verifica que JavaScript esté habilitado en tu navegador
+- Abre la consola del navegador (F12) para ver errores
+- Intenta limpiar el localStorage y subir el archivo nuevamente
+
+### La página no carga
+- Verifica que todos los archivos estén en la misma carpeta
+- Asegúrate de que `index.html`, `script.js`, `analyzer.js` y `styles.css` estén presentes
+- Intenta usar un servidor local en lugar de abrir el archivo directamente
 
 ## 📝 Notas
 
-- Los scripts buscan el archivo de chat en `data/` y generan el JSON en la misma carpeta
-- La página web HTML busca el JSON en `data/whatsapp_data.json` (ruta relativa)
-- Si cambias la estructura de carpetas, asegúrate de actualizar las rutas en los archivos
-- Ambas versiones (Python y JavaScript) producen el mismo resultado
+- El análisis puede tardar unos segundos dependiendo del tamaño del archivo
+- Se recomienda exportar el chat **sin multimedia** para archivos más pequeños y procesamiento más rápido
+- Los avatares se generan automáticamente basándose en las iniciales de cada persona
+- El filtro de palabras ignora conectores comunes y palabras muy cortas para mostrar resultados más significativos
 
+## 🌐 Demo en vivo
+
+Visita la versión en vivo: [https://bigote97.github.io/whatsapp-wrapped/](https://bigote97.github.io/whatsapp-wrapped/)
+
+## 📄 Licencia
+
+Este proyecto es de código abierto y está disponible para uso personal y educativo.
+
+---
+
+**¡Disfruta descubriendo quién domina tu grupo de WhatsApp! 🏆**
