@@ -458,10 +458,42 @@ async function extractZipContent(file) {
 // Función para leer contenido de archivo TXT
 function readTextFile(file) {
     return new Promise((resolve, reject) => {
+        console.log('Iniciando lectura de archivo TXT:', file.name);
+        
+        // Validar que el archivo existe y tiene tamaño
+        if (!file || file.size === 0) {
+            reject(new Error('El archivo está vacío o no se pudo acceder'));
+            return;
+        }
+        
         const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target.result);
-        reader.onerror = (e) => reject(new Error('Error al leer el archivo'));
-        reader.readAsText(file, 'utf-8');
+        
+        reader.onload = (e) => {
+            console.log('Archivo leído exitosamente, tamaño del contenido:', e.target.result.length);
+            if (!e.target.result || e.target.result.length === 0) {
+                reject(new Error('El archivo está vacío'));
+                return;
+            }
+            resolve(e.target.result);
+        };
+        
+        reader.onerror = (e) => {
+            console.error('Error en FileReader:', e);
+            reject(new Error('Error al leer el archivo. Verifica que el archivo no esté corrupto.'));
+        };
+        
+        reader.onabort = () => {
+            console.error('Lectura de archivo abortada');
+            reject(new Error('La lectura del archivo fue cancelada'));
+        };
+        
+        // Intentar leer con diferentes encodings si falla UTF-8
+        try {
+            reader.readAsText(file, 'utf-8');
+        } catch (error) {
+            console.error('Error al iniciar lectura:', error);
+            reject(new Error('No se pudo iniciar la lectura del archivo: ' + error.message));
+        }
     });
 }
 
@@ -469,29 +501,72 @@ function readTextFile(file) {
 async function processUploadedFile(file) {
     const uploadStatus = document.getElementById('uploadStatus');
     const uploadArea = document.getElementById('uploadArea');
+    const statusText = document.getElementById('uploadStatusText') || uploadStatus.querySelector('p');
     
+    // Validar que el archivo existe
+    if (!file) {
+        console.error('No se seleccionó ningún archivo');
+        statusText.textContent = '❌ Error: No se seleccionó ningún archivo';
+        statusText.style.color = '#ffcccc';
+        uploadArea.style.display = 'block';
+        uploadStatus.style.display = 'block';
+        return;
+    }
+    
+    console.log('Archivo seleccionado:', file.name, 'Tamaño:', file.size, 'bytes');
+    
+    // Ocultar área de upload y mostrar estado
     uploadArea.style.display = 'none';
-    uploadStatus.style.display = 'block';
+    uploadStatus.style.display = 'flex'; // Cambiar a flex para mejor visualización
+    statusText.textContent = '📁 Archivo seleccionado: ' + file.name;
+    statusText.style.color = '#ffffff';
+    
+    // Asegurar que el spinner sea visible
+    const spinner = uploadStatus.querySelector('.spinner');
+    if (spinner) {
+        spinner.style.display = 'block';
+    }
+    
+    // Pequeño delay para que el usuario vea el feedback
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     try {
         let content;
         
         // Determinar si es ZIP o TXT
+        statusText.textContent = '📦 Leyendo archivo...';
+        console.log('Leyendo archivo:', file.name);
+        
         if (file.name.endsWith('.zip')) {
+            statusText.textContent = '📦 Extrayendo contenido del ZIP...';
             content = await extractZipContent(file);
+            console.log('Contenido extraído del ZIP, longitud:', content.length);
         } else if (file.name.endsWith('.txt')) {
+            statusText.textContent = '📄 Leyendo archivo de texto...';
             content = await readTextFile(file);
+            console.log('Archivo TXT leído, longitud:', content.length);
         } else {
             throw new Error('Formato de archivo no soportado. Use .txt o .zip');
         }
         
+        // Validar que el contenido no esté vacío
+        if (!content || content.length === 0) {
+            throw new Error('El archivo está vacío o no se pudo leer correctamente');
+        }
+        
         // Analizar el contenido
-        uploadStatus.querySelector('p').textContent = 'Analizando mensajes...';
+        statusText.textContent = '🔍 Analizando mensajes...';
+        console.log('Iniciando análisis del chat...');
+        
         const analyzer = new WhatsAppAnalyzer();
         const data = analyzer.analyze(content);
         
+        console.log('Análisis completado:', data);
+        
         // Guardar en localStorage
+        statusText.textContent = '💾 Guardando datos...';
         localStorage.setItem('whatsapp_wrapped_data', JSON.stringify(data));
+        console.log('Datos guardados en localStorage');
         
         // Ocultar upload y mostrar splash
         document.getElementById('uploadScreen').style.display = 'none';
@@ -502,10 +577,34 @@ async function processUploadedFile(file) {
         
     } catch (error) {
         console.error('Error procesando archivo:', error);
-        uploadStatus.querySelector('p').textContent = `❌ Error: ${error.message}`;
-        uploadStatus.querySelector('p').style.color = '#ffcccc';
+        console.error('Stack trace:', error.stack);
+        
+        let errorMessage = 'Error desconocido';
+        if (error.message) {
+            errorMessage = error.message;
+        } else if (typeof error === 'string') {
+            errorMessage = error;
+        }
+        
+        // Ocultar spinner en caso de error
+        const spinner = uploadStatus.querySelector('.spinner');
+        if (spinner) {
+            spinner.style.display = 'none';
+        }
+        
+        statusText.textContent = `❌ Error: ${errorMessage}`;
+        statusText.style.color = '#ffcccc';
         uploadArea.style.display = 'block';
-        uploadStatus.style.display = 'none';
+        uploadStatus.style.display = 'flex';
+        
+        // Mostrar error también en consola para debugging
+        console.error('Mensaje de error completo:', errorMessage);
+        
+        // Resetear el input para permitir seleccionar el mismo archivo de nuevo
+        const fileInput = document.getElementById('fileInput');
+        if (fileInput) {
+            fileInput.value = '';
+        }
     }
 }
 
@@ -618,15 +717,71 @@ function init() {
     // Configurar upload de archivos
     const fileInput = document.getElementById('fileInput');
     const uploadArea = document.getElementById('uploadArea');
+    const uploadStatus = document.getElementById('uploadStatus');
     
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
+    // Función para manejar la selección de archivo
+    function handleFileSelection(file) {
+        console.log('Archivo seleccionado en handleFileSelection:', file);
         if (file) {
+            // Validar tipo de archivo
+            if (!file.name.endsWith('.txt') && !file.name.endsWith('.zip')) {
+                const statusText = document.getElementById('uploadStatusText') || uploadStatus.querySelector('p');
+                const spinner = uploadStatus.querySelector('.spinner');
+                if (spinner) spinner.style.display = 'none';
+                uploadStatus.style.display = 'flex';
+                statusText.textContent = '❌ Error: Solo se aceptan archivos .txt o .zip';
+                statusText.style.color = '#ffcccc';
+                uploadArea.style.display = 'block';
+                setTimeout(() => {
+                    uploadStatus.style.display = 'none';
+                }, 5000);
+                return;
+            }
+            
+            // Validar tamaño (máximo 50MB)
+            if (file.size > 50 * 1024 * 1024) {
+                const statusText = document.getElementById('uploadStatusText') || uploadStatus.querySelector('p');
+                const spinner = uploadStatus.querySelector('.spinner');
+                if (spinner) spinner.style.display = 'none';
+                uploadStatus.style.display = 'flex';
+                statusText.textContent = '❌ Error: El archivo es demasiado grande (máximo 50MB)';
+                statusText.style.color = '#ffcccc';
+                uploadArea.style.display = 'block';
+                setTimeout(() => {
+                    uploadStatus.style.display = 'none';
+                }, 5000);
+                return;
+            }
+            
             processUploadedFile(file);
+        } else {
+            console.log('No se seleccionó ningún archivo');
+        }
+    }
+    
+    // Múltiples eventos para mejor compatibilidad con Android
+    fileInput.addEventListener('change', (e) => {
+        console.log('Evento change disparado');
+        const file = e.target.files[0];
+        handleFileSelection(file);
+    });
+    
+    // También escuchar el evento 'input' para Android
+    fileInput.addEventListener('input', (e) => {
+        console.log('Evento input disparado');
+        const file = e.target.files[0];
+        handleFileSelection(file);
+    });
+    
+    // Click directo en el área de upload (para móviles)
+    uploadArea.addEventListener('click', (e) => {
+        // Solo si no se hizo click en el label directamente
+        if (e.target === uploadArea || e.target.closest('.upload-label')) {
+            fileInput.click();
         }
     });
     
-    // Drag and drop
+    // Drag and drop (solo para desktop)
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
         uploadArea.classList.add('drag-over');
@@ -642,7 +797,7 @@ function init() {
         const file = e.dataTransfer.files[0];
         if (file && (file.name.endsWith('.txt') || file.name.endsWith('.zip'))) {
             fileInput.files = e.dataTransfer.files;
-            processUploadedFile(file);
+            handleFileSelection(file);
         }
     });
     

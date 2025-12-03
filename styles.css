@@ -213,10 +213,30 @@
     text-align: center;
     color: white;
     margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-status p {
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-top: 15px;
+    word-wrap: break-word;
+    max-width: 100%;
 }
 
 .upload-status .spinner {
     margin: 0 auto 20px;
+    width: 50px;
+    height: 50px;
 }
 
 /* Tutorial de exportación */
